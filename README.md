@@ -3,11 +3,22 @@
 * The filter allow that you can "tag jump" from NUnit output on Visual Studio output.
 
 ## Usage
+### Build event
 * add a build event as "Post Build Event" and "On Output Updated" in the test project.
 ```Batchfile
 cd /d "$(TargetDir)"
 nunit-console-x86.exe "$(TargetPath)" | NUnit-VS-TagJump.exe
 ```
+
+### External tools
+<table border="1">
+<tr><th>Title</th><td>NUnit(&U)</td></tr>
+<tr><th>Command</th><td>NUnit_VS.bat</td></tr>
+<tr><th>Arguments</th><td>"$(BinDir)$(TargetName)$(TargetExt)"</td></tr>
+<tr><th>Initial directory</th><td>"$(BinDir)"</td></tr>
+<tr><th>use output window</th><td>check</td></tr>
+<tr><th>NUnit_VS.bat</th><td>@echo off<br>NUinit-console-x86.exe "%1" | NUnit-VS-TagJump.exe</td></tr>
+</table>
 
 ## NUnit-VS-TagJump.exe convert NUnit output like as below.
 * before
