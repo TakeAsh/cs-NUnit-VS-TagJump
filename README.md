@@ -11,17 +11,13 @@ nunit-console-x86.exe "$(TargetPath)" | NUnit-VS-TagJump.exe
 ```
 
 * NUnit-VS-TagJump.exe convert NUnit output like as below.
-
   * before
-
 > 1) Test Failure : Sample1Test.Class1Test.maxTest_double(3.0d,1.0d,1.0d)
 >     Expected: 1.0d
 >  But was:  3.0d
 >
 > at Sample1Test.Class1Test.maxTest_double(Double a, Double b, Double expected) in D:\_temp\cs-NUnit-VS-TagJump\Sample1Test\Class1Test.cs:line 25
-
   * after
-
 > 1) Test Failure : Sample1Test.Class1Test.maxTest_double(3.0d,1.0d,1.0d)
 >     Expected: 1.0d
 >  But was:  3.0d
