@@ -17,7 +17,7 @@ nunit-console-x86.exe "$(TargetPath)" | NUnit-VS-TagJump.exe
 <tr><th>Arguments</th><td>"$(BinDir)$(TargetName)$(TargetExt)"</td></tr>
 <tr><th>Initial directory</th><td>"$(BinDir)"</td></tr>
 <tr><th>use output window</th><td>check</td></tr>
-<tr><th>NUnit_VS.bat</th><td>@echo off<br>NUinit-console-x86.exe "%1" | NUnit-VS-TagJump.exe</td></tr>
+<tr><th>NUnit_VS.bat</th><td>@echo off<br>nunit-console-x86.exe "%1" | NUnit-VS-TagJump.exe</td></tr>
 </table>
 
 ## NUnit-VS-TagJump.exe convert NUnit output like as below.
