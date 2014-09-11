@@ -51,22 +51,22 @@ namespace TakeAsh {
             Environment.Exit(errorCount);
         }
 
-        static bool checkMatch(string str, Regex reg, ref string variable) {
+        static bool checkMatch(string str, Regex reg, ref string output) {
             MatchCollection mc = reg.Matches(str);
             if (mc.Count > 0) {
                 Match m = mc[0];
-                variable = m.Groups["target"].Value;
+                output = m.Groups["target"].Value;
                 return true;
             } else {
                 return false;
             }
         }
 
-        static bool checkMatchLineInFile(string str, Regex reg, ref string variable) {
+        static bool checkMatchLineInFile(string str, Regex reg, ref string output) {
             MatchCollection mc = reg.Matches(str);
             if (mc.Count > 0) {
                 Match m = mc[0];
-                variable = String.Format(
+                output = String.Format(
                     "{0}\n{1}({2})",
                     m.Groups["head"].Value, m.Groups["file"].Value, m.Groups["line"].Value
                 );
