@@ -30,7 +30,7 @@ namespace TakeAsh {
                             Console.WriteLine(line);
                         } else if (checkMatchLineInFile(line, regLineInFile, ref line2)) {
                             Console.WriteLine(
-                                "{0}: assert error : TestCase:{1}, Expected:{2}, Actual:{3}",
+                                "{0}: Error : TestCase:{1}, Expected:{2}, Actual:{3}",
                                 line2, testCase, expected, actual
                             );
                             line2 = testCase = expected = actual = "";
@@ -38,13 +38,13 @@ namespace TakeAsh {
                         } else if (checkMatch(line, regTestError, ref testCase)) {
                             var errorMessage = input.ReadLine();
                             Console.WriteLine(
-                                "{0}) NUnit TestError: Test Error : TestCase:{1},{2}",
+                                "{0}) NUnit TestError: Error : TestCase:{1},{2}",
                                 ++errorCount, testCase, errorMessage
                             );
                         } else if (checkMatch(line, regNotRunnable, ref testCase)) {
                             var errorMessage = input.ReadLine();
                             Console.WriteLine(
-                                "{0}) NUnit NotRun: NotRun Error : TestCase:{1},{2}",
+                                "{0}) NUnit NotRun: Error : TestCase:{1},{2}",
                                 ++notRunCount, testCase, errorMessage
                             );
                         } else {
