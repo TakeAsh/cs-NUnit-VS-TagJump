@@ -11,7 +11,7 @@ namespace Sample1Test {
 
         [TestCase(1, 3, 1)]   // test fail
         [TestCase(1, 3, 3)]
-        [TestCase(3, 1, 1)]   // test fail
+        [TestCase(3, 1, 1.0)]   // test error
         [TestCase(3, 1, 3)]
         public void maxTest_int(int a, int b, int expected) {
             Assert.AreEqual(expected, Class1.max(a, b));

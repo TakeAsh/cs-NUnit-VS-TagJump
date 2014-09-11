@@ -6,13 +6,15 @@ using System.Text.RegularExpressions;
 namespace TakeAsh {
     class Program {
         static void Main(string[] args) {
-            Regex regTestCase = new Regex(@"Test\sFailure\s*:\s*(?<target>[\s\S]+)$");
+            Regex regTestFailure = new Regex(@"Test\sFailure\s*:\s*(?<target>[\s\S]+)$");
             Regex regExpected = new Regex(@"Expected\s*:\s*(?<target>[\s\S]+)$");
             Regex regActual = new Regex(@"But\swas\s*:\s*(?<target>[\s\S]+)$");
             Regex regLineInFile = new Regex(@"^(?<head>[\s\S]*)\s+(in|場所)\s(?<file>([a-zA-Z]:)?[^:]+?):(line|行)\s(?<line>\d+)$");
+            Regex regTestError = new Regex(@"Test\sError\s*:\s*(?<target>[\s\S]+)$", RegexOptions.IgnoreCase);
             string testCase = "";
             string expected = "";
             string actual = "";
+            string line2 = "";
             int errorCount = 0;
             try {
                 using (TextReader input = args.Length == 0 ?
@@ -20,22 +22,23 @@ namespace TakeAsh {
                     new StreamReader(args[0])) {
                     string line;
                     while ((line = input.ReadLine()) != null) {
-                        if (checkMatch(line, regTestCase, ref testCase) ||
+                        if (checkMatch(line, regTestFailure, ref testCase) ||
                             checkMatch(line, regExpected, ref expected) ||
                             checkMatch(line, regActual, ref actual)) {
                             Console.WriteLine(line);
-                            continue;
-                        }
-                        MatchCollection mc = regLineInFile.Matches(line);
-                        if (mc.Count > 0) {
-                            Match m = mc[0];
+                        } else if (checkMatchLineInFile(line, regLineInFile, ref line2)) {
                             Console.WriteLine(
-                                "{0}\n{1}({2}): assert error : TestCase:{3}, Expected:{4}, Actual:{5}",
-                                m.Groups["head"].Value, m.Groups["file"].Value, m.Groups["line"].Value,
-                                testCase, expected, actual
+                                "{0}: assert error : TestCase:{1}, Expected:{2}, Actual:{3}",
+                                line2, testCase, expected, actual
                             );
-                            testCase = expected = actual = "";
+                            line2 = testCase = expected = actual = "";
                             ++errorCount;
+                        } else if (checkMatch(line, regTestError, ref testCase)) {
+                            var errorMessage = input.ReadLine();
+                            Console.WriteLine(
+                                "{0}) NUnit: Test Error : TestCase:{1},{2}",
+                                ++errorCount, testCase, errorMessage
+                            );
                         } else {
                             Console.WriteLine(line);
                         }
@@ -53,6 +56,20 @@ namespace TakeAsh {
             if (mc.Count > 0) {
                 Match m = mc[0];
                 variable = m.Groups["target"].Value;
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        static bool checkMatchLineInFile(string str, Regex reg, ref string variable) {
+            MatchCollection mc = reg.Matches(str);
+            if (mc.Count > 0) {
+                Match m = mc[0];
+                variable = String.Format(
+                    "{0}\n{1}({2})",
+                    m.Groups["head"].Value, m.Groups["file"].Value, m.Groups["line"].Value
+                );
                 return true;
             } else {
                 return false;
