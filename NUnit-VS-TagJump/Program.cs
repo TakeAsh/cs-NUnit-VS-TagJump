@@ -11,11 +11,13 @@ namespace TakeAsh {
             Regex regActual = new Regex(@"But\swas\s*:\s*(?<target>[\s\S]+)$");
             Regex regLineInFile = new Regex(@"^(?<head>[\s\S]*)\s+(in|場所)\s(?<file>([a-zA-Z]:)?[^:]+?):(line|行)\s(?<line>\d+)$");
             Regex regTestError = new Regex(@"Test\sError\s*:\s*(?<target>[\s\S]+)$", RegexOptions.IgnoreCase);
+            Regex regNotRunnable = new Regex(@"NotRunnable\s*:\s*(?<target>[\s\S]+)$");
             string testCase = "";
             string expected = "";
             string actual = "";
             string line2 = "";
             int errorCount = 0;
+            int notRunCount = 0;
             try {
                 using (TextReader input = args.Length == 0 ?
                     Console.In :
@@ -36,8 +38,14 @@ namespace TakeAsh {
                         } else if (checkMatch(line, regTestError, ref testCase)) {
                             var errorMessage = input.ReadLine();
                             Console.WriteLine(
-                                "{0}) NUnit: Test Error : TestCase:{1},{2}",
+                                "{0}) NUnit TestError: Test Error : TestCase:{1},{2}",
                                 ++errorCount, testCase, errorMessage
+                            );
+                        } else if (checkMatch(line, regNotRunnable, ref testCase)) {
+                            var errorMessage = input.ReadLine();
+                            Console.WriteLine(
+                                "{0}) NUnit NotRun: NotRun Error : TestCase:{1},{2}",
+                                ++notRunCount, testCase, errorMessage
                             );
                         } else {
                             Console.WriteLine(line);
@@ -48,7 +56,7 @@ namespace TakeAsh {
             catch (Exception ex) {
                 Console.Error.WriteLine(ex.Message);
             }
-            Environment.Exit(errorCount);
+            Environment.Exit(errorCount + notRunCount);
         }
 
         static bool checkMatch(string str, Regex reg, ref string output) {
