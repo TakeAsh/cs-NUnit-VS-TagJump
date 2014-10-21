@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Sample1;
+using TakeAsh;
 
 namespace Sample1Test {
     [TestFixture]
@@ -23,7 +20,60 @@ namespace Sample1Test {
         [TestCase(3.0, 1.0, 1.0)]   // test fail
         [TestCase(3.0, 1.0, 3.0)]
         public void maxTest_double(double a, double b, double expected) {
-            Assert.AreEqual(expected,Class1.max(a,b));
+            Assert.AreEqual(expected, Class1.max(a, b));
+        }
+
+        public struct IntTestCase {
+            public int a { get; set; }
+            public int b { get; set; }
+            public int expected { get; set; }
+
+            public IntTestCase(int a, int b, int expected) : this() {
+                this.a = a;
+                this.b = b;
+                this.expected = expected;
+            }
+        }
+
+        static IntTestCase[] intTestCase1 = {
+            new IntTestCase(1, 3, 1),   // test fail
+            new IntTestCase(1, 3, 3),
+            //new IntTestCase(3, 1, 1.0), // can't compile
+            new IntTestCase(3, 1, 3),
+            //new IntTestCase(1, 2),      // can't compile
+        };
+
+        static object[] intTestCase2 = NUnitHelper<IntTestCase>.makeTestCases(intTestCase1);
+
+        [Test, TestCaseSource("intTestCase2")]
+        public void maxTest_int2(int a, int b, int expected) {
+            Assert.AreEqual(expected, Class1.max(a, b));
+        }
+
+        public struct DoubleTestCase {
+            public double a { get; set; }
+            public double b { get; set; }
+            public double expected { get; set; }
+
+            public DoubleTestCase(double a, double b, double expected) : this() {
+                this.a = a;
+                this.b = b;
+                this.expected = expected;
+            }
+        }
+
+        static DoubleTestCase[] doubleTestCase1 = {
+            new DoubleTestCase(1.0, 3.0, 1.0),  // test fail
+            new DoubleTestCase(1.0, 3.0, 3.0),
+            new DoubleTestCase(3.0, 1.0, 1.0),  // test fail
+            new DoubleTestCase(3.0, 1.0, 3.0),
+        };
+
+        static object[] doubleTestCase2 = NUnitHelper<DoubleTestCase>.makeTestCases(doubleTestCase1);
+
+        [Test, TestCaseSource("doubleTestCase2")]
+        public void maxTest_double2(double a, double b, double expected) {
+            Assert.AreEqual(expected, Class1.max(a, b));
         }
     }
 }
