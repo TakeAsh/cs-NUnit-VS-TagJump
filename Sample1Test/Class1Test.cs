@@ -1,4 +1,8 @@
-﻿using NUnit.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using NUnit.Framework;
 using Sample1;
 using TakeAsh;
 
@@ -74,6 +78,37 @@ namespace Sample1Test {
         [Test, TestCaseSource("doubleTestCase2")]
         public void maxTest_double2(double a, double b, double expected) {
             Assert.AreEqual(expected, Class1.max(a, b));
+        }
+
+        [Test, TestCaseSource(typeof(TestDataProvider), "Int_TestCases")]
+        public int maxTest_int3(
+            string no,
+            int a,
+            int b
+        ) {
+            return Class1.max(a, b);
+        }
+    }
+
+    static public class TestDataProvider {
+        private const string dataFile = "../TestData/IntTestCases.txt";
+
+        static public IEnumerable<TestCaseData> Int_TestCases {
+            get {
+                foreach (var line in File.ReadLines(dataFile, Encoding.UTF8)) {
+                    if (line[0] == '#') {
+                        continue;
+                    }
+                    var items = line.Split('\t');
+                    yield return new TestCaseData(
+                        items[0],
+                        Int32.Parse(items[1]),
+                        Int32.Parse(items[2])
+                    ).Returns(
+                        Int32.Parse(items[3])
+                    );
+                }
+            }
         }
     }
 }
